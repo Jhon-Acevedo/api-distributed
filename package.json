@@ -1,0 +1,26 @@
+{
+  "name": "api-distributed",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jhon-Acevedo/api-distributed.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jhon-Acevedo/api-distributed/issues"
+  },
+  "homepage": "https://github.com/Jhon-Acevedo/api-distributed#readme",
+  "dependencies": {
+    "Express": "^3.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}

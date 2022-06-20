@@ -8,9 +8,8 @@ const PORT = 3000;
 
 app.get('/ping', (req, res) => {
   res.send('pong');
-  console.log('pong');
 });
 
 app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

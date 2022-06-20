@@ -2,7 +2,7 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@typescript-eslint",
+    "@typescript-eslint"
   ],
   "extends": [
     "eslint:recommended",
@@ -10,6 +10,7 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
-    "no-console": 1
+    "@typescript-eslint/no-unused-vars": "warn"
+
   }
 }

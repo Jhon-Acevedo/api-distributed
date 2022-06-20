@@ -1,6 +1,6 @@
 import { IConnection } from './IConnection';
 import { MongoClient, Db } from 'mongodb';
-import NoClientError from '../Errors/NoClientError';
+import NoClientError from '../errors/NoClientError';
 import * as dotenv from 'dotenv';
 
 export default class ConnectionMongo implements IConnection {

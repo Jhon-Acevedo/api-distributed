@@ -1,8 +1,8 @@
 import SubjectRepository from '../../src/repositories/SubjectRepository';
-import ConnectionMongo from '../../src/ConnectionDB/ConnectionMongo';
+import ConnectionMongo from '../../src/connectionDB/ConnectionMongo';
 import { Subject } from '../../src/models/Subject';
 import ISubjectRepository from '../../src/repositories/ISubjectRepository';
-import { IConnection } from '../../src/ConnectionDB/IConnection';
+import { IConnection } from '../../src/connectionDB/IConnection';
 
 describe('SubjectRepository', () => {
   let subjectRepository: ISubjectRepository;

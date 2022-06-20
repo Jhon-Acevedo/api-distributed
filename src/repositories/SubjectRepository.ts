@@ -2,7 +2,7 @@
 
 import ISubjectRepository from './ISubjectRepository';
 import { Collection, MongoClient } from 'mongodb';
-import { IConnection } from '../ConnectionDB/IConnection';
+import { IConnection } from '../connectionDB/IConnection';
 import { Subject } from '../models/Subject';
 
 export default class SubjectRepository implements ISubjectRepository {

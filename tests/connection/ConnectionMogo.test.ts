@@ -1,4 +1,4 @@
-import ConnectionMongo from '../../src/ConnectionDB/ConnectionMongo';
+import ConnectionMongo from '../../src/connectionDB/ConnectionMongo';
 
 describe('ConnectionMongo', () => {
   let connection: ConnectionMongo;

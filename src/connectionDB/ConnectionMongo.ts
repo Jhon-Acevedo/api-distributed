@@ -19,7 +19,7 @@ export default class ConnectionMongo implements IConnection {
     this._connected = true;
     if (this.client) return this.client.db(process.env.DB_NAME);
     else {
-      this.client = new MongoClient(process.env.DB_CONN_STRING);
+      this.client = new MongoClient(process.env.DB_CONN_STRING as string);
       return await this.client.connect().then((client) => {
         return client.db(process.env.DB_NAME);
       });

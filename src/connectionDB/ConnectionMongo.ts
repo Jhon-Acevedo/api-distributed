@@ -11,7 +11,7 @@ export default class ConnectionMongo implements IConnection {
     dotenv.config();
   }
 
-  /** 
+  /**
    * connect to mongoDB database
    */
 
@@ -41,13 +41,4 @@ export default class ConnectionMongo implements IConnection {
   isConnected(): boolean {
     return this._connected;
   }
-
-  /**
-   * Get client instance
-   * @returns mongoDB Client
-   */
-
-  // get client(): MongoClient {
-  //   return this.client;
-  // }
 }

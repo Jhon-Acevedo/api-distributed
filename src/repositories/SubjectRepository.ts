@@ -14,7 +14,7 @@ export default class SubjectRepository implements ISubjectRepository {
     this._dbConnection.connect();
     this._db = (this._dbConnection.client as MongoClient)
       .db(process.env.DB_NAME)
-      .collection(process.env.SUBJECT_COLLECTION_NAME);
+      .collection(process.env.SUBJECT_COLLECTION_NAME as string);
   }
 
   /**

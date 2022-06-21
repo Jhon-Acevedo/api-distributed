@@ -13,7 +13,7 @@ export default class StudentRepository implements IStudentRepository {
       this._dbConnection.connect();
       this._db = (this._dbConnection.client as MongoClient)
         .db(process.env.DB_NAME)
-        .collection(process.env.STUDENT_COLLECTION_NAME);
+        .collection(process.env.STUDENT_COLLECTION_NAME as string);
     }
 
    /**
@@ -63,12 +63,13 @@ export default class StudentRepository implements IStudentRepository {
       { id: student.id },
       {
         $set: {
-          document_id: student.document_id,
+          document_number: student.document_number,
           document_type: student.document_type,
           name: student.name,
           surname: student.surname,
-          academic_id: student.academic_id,
-          status: student.status
+          student_code: student.student_code,
+          email: student.email,
+          state: student.state
         }
       }
     );

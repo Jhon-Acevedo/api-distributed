@@ -9,9 +9,11 @@ describe('SubjectRepository', () => {
   let dbConnection: IConnection;
   let subject: Subject;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     dbConnection = new ConnectionMongo();
-    subjectRepository = new SubjectRepository(dbConnection);
+    [subjectRepository] = await Promise.all([
+      new SubjectRepository(dbConnection)
+    ]);
     subject = {
       id: new Date().valueOf(),
       name: 'Test',

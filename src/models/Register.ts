@@ -1,5 +1,5 @@
 export interface Register {
-    idStudent: number;
-    idSubject: number;
-    dateRegister: Date;
+  idStudent: number;
+  idSubject: number;
+  dateRegister: Date;
 }

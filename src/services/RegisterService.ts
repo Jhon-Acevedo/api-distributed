@@ -46,11 +46,11 @@ export default class RegisterService {
    * @param student_id subject_id of the subject to find
    * @returns array of id_subjects
    */
-  async findSubjectsByStudent(student_id: number): Promise<Subject[]> {
+  async findSubjectsByStudent(student_id: number): Promise<number[]> {
     // if (await this._studentRepository.findById(student_id) === null) {
     //   throw new Error('Student not found');
     // } else {
-      return await this._registerRepository.findSubjectsByStudent(student_id);
+    return await this._registerRepository.findSubjectsByStudent(student_id);
     // }
   }
 
@@ -59,7 +59,7 @@ export default class RegisterService {
    * @param subject_id subject_id of the subject to find
    * @returns array of students
    */
-  async findStudentsBySubject(subject_id: number): Promise<Student[]> {
+  async findStudentsBySubject(subject_id: number): Promise<number[]> {
     if (await this._subjectRepository.findById(subject_id) === null) {
       throw new Error('Subject not found');
     } else {

@@ -3,7 +3,7 @@ import { IController } from './IController';
 import { Request, Response, Router } from 'express';
 
 export default class SubjectController implements IController {
-  private _subjectService: SubjectService;
+  private readonly _subjectService: SubjectService;
   path: string;
   router: Router;
 
@@ -26,10 +26,17 @@ export default class SubjectController implements IController {
   }
 
   /**
-   * Get all subjects
-   * @param req request
-   * @param res response
-   * @returns all subjects
+   * @openapi
+   * /subjects:
+   *  get:
+   *    tags:
+   *      - Subject
+   *    summary: Gets all subjects
+   *    responses:
+   *      200:
+   *        description: If it gets all subjects successfully
+   *      500:
+   *        description: If it fails to get all subjects
    */
   public getAll = async (req: Request, res: Response) => {
     await this._subjectService
@@ -43,10 +50,22 @@ export default class SubjectController implements IController {
   };
 
   /**
-   * Get a subject by id
-   * @param req request
-   * @param res response
-   * @returns the subject with the given id
+   * @openapi
+   * /subjects/{id}:
+   *  get:
+   *    tags:
+   *      - Subject
+   *    summary: Gets all subjects
+   *    responses:
+   *      200:
+   *        description: If it gets all subjects successfully
+   *      500:
+   *        description: If it fails to get all subjects
+   *      404:
+   *        description: If it fails to get all subjects
+   *    parameters:
+   *      - name: id
+   *        in: path
    */
   public getById = async (req: Request, res: Response) => {
     if (!req.params.id) {
@@ -60,10 +79,21 @@ export default class SubjectController implements IController {
           res.status(200).json(data);
         })
         .catch((err) => {
-          res.status(500).json(err);
+          this.handleErrors(err, res);
         });
     }
   };
+
+  handleErrors(err: Error, res: Response) {
+    switch (err.message) {
+      case 'Subject not found':
+        res.status(404).json(err);
+        break;
+      case 'Invalid id':
+        res.status(400).json(err);
+        break;
+    }
+  }
 
   /**
    * Create a new subject

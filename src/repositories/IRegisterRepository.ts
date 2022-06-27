@@ -8,9 +8,9 @@ export default interface IRegisterRepository {
 
   findAll(): Promise<Register[]>;
 
-  findSubjectsByStudent(student_id: number): Promise<Subject[]>;
+  findSubjectsByStudent(student_id: number): Promise<number[]>;
 
-  findStudentsBySubject(subject_id: number): Promise<Student[]>;
+  findStudentsBySubject(subject_id: number): Promise<number[]>;
 
   delete(student_id: number, subject_id: number): Promise<Register>;
 }

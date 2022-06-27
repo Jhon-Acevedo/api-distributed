@@ -26,10 +26,15 @@ export default class RegisterController implements IController {
   }
 
   /**
-   * Get all Register
-   * @param req request
-   * @param res response
-   * @returns all registers
+   * @openapi
+   * /registrations:
+   *  get:
+   *    tags:
+   *      - Registrations
+   *    summary:
+   *    responses:
+   *      200:
+   *        description: App is up and running
    */
   public getAll = async (req: Request, res: Response) => {
     await this._registerService
@@ -59,7 +64,8 @@ export default class RegisterController implements IController {
         .create(req.body)
         .then((data) => {
           res.status(200).json(data);
-        }).catch((err) => {
+        })
+        .catch((err) => {
           res.status(500).json(err);
         });
     }
@@ -76,7 +82,8 @@ export default class RegisterController implements IController {
         .findSubjectsByStudent(Number(req.params.id))
         .then((data) => {
           res.status(200).json(data);
-        }).catch((err) => {
+        })
+        .catch((err) => {
           res.status(500).json(err);
         });
     }
@@ -98,7 +105,8 @@ export default class RegisterController implements IController {
         .findStudentsBySubject(Number(req.params.id))
         .then((data) => {
           res.status(200).json(data);
-        }).catch((err) => {
+        })
+        .catch((err) => {
           res.status(500).json(err);
         });
     }
@@ -109,16 +117,18 @@ export default class RegisterController implements IController {
       res.status(400).json({
         message: 'Missing id parameter'
       });
-    } else if (req.body.idStudent.match(/^\d+$/) && req.body.idSubject.match(/^\d+$/)) {
+    } else if (
+      req.body.idStudent.match(/^\d+$/) &&
+      req.body.idSubject.match(/^\d+$/)
+    ) {
       await this._registerService
         .delete(Number(req.params.idStudent), Number(req.params.idSubject))
         .then((data) => {
           res.status(200).json(data);
-        }).catch((err) => {
+        })
+        .catch((err) => {
           res.status(500).json(err);
         });
     }
   };
-
-
-};
+}

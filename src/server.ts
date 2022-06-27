@@ -5,9 +5,11 @@ import { ServiceLocator } from './ServiceLocator';
 import App from './app';
 
 export const server = new App(
-  [new PostsController(ServiceLocator.getSubjectService()),
+  [
+    new PostsController(ServiceLocator.getSubjectService()),
     new PostsStudentController(ServiceLocator.getStudentService()),
-    new PostRegisterController(ServiceLocator.getRegisterService())],
+    new PostRegisterController(ServiceLocator.getRegisterService())
+  ],
   5000
 );
 

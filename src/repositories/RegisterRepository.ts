@@ -2,11 +2,8 @@ import { Collection, MongoClient } from 'mongodb';
 import IRegisterRepository from './IRegisterRepository';
 import { IConnection } from '../connectionDB/IConnection';
 import { Register } from '../models/Register';
-import { Student } from '../models/Student';
-import { Subject } from '../models/Subject';
 
 export default class RegisterRepository implements IRegisterRepository {
-
   private _dbConnection: IConnection;
   private _db: Collection;
 
@@ -57,10 +54,12 @@ export default class RegisterRepository implements IRegisterRepository {
    * @returns the deleted subject
    */
   async delete(student_id: number, subject_id: number): Promise<Register> {
-    return await this._db.deleteOne({
-      idStudent: student_id,
-      idSubject: subject_id
-    }).then((result) => result) as Register;
+    return (await this._db
+      .deleteOne({
+        idStudent: student_id,
+        idSubject: subject_id
+      })
+      .then((result) => result)) as Register;
   }
 
   /**
@@ -68,6 +67,9 @@ export default class RegisterRepository implements IRegisterRepository {
    * @returns all register in the database
    */
   async findAll(): Promise<Register[]> {
-    return await this._db.find().toArray().then((result) => result) as Register[];
+    return (await this._db
+      .find()
+      .toArray()
+      .then((result) => result)) as Register[];
   }
 }

@@ -19,11 +19,12 @@ describe('RegisterRepository', () => {
   let student: Student;
   let subject: Subject;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     dbConnection = new ConnectionMongo();
-    registerRepository = new RegisterRepository(dbConnection);
+
     subjectRepository = new SubjectRepository(dbConnection);
     studentRepository = new StudentRepository(dbConnection);
+    registerRepository = new RegisterRepository(dbConnection);
 
     student = {
       id: 1655829922404,
@@ -37,8 +38,8 @@ describe('RegisterRepository', () => {
     };
 
     subject = {
-      id: 2,
-      name: 'Calculo II',
+      id: 1999999,
+      name: 'Calculo I',
       credits: 3,
       code: '1001CAL',
       slots: 3,
@@ -47,19 +48,17 @@ describe('RegisterRepository', () => {
     };
 
     register = {
-      idStudent: 1655829922404,
-      idSubject: 1,
+      idStudent: student.id,
+      idSubject: subject.id,
       dateRegister: new Date()
     } as Register;
-
-    subjectRepository.create(subject);
-    studentRepository.create(student);
+    await subjectRepository.create(subject);
+    await studentRepository.create(student);
   });
 
   afterEach(async () => {
-    await studentRepository.delete(student.id);
-    await subjectRepository.delete(subject.id);
-    await dbConnection.disconnect();
+    await studentRepository.delete(student.id).catch(() => console.log(''));
+    await subjectRepository.delete(subject.id).catch(() => console.log(''));
   });
 
   it('should be defined', async () => {
@@ -75,22 +74,23 @@ describe('RegisterRepository', () => {
 
   it(' should be able to find a student by idSubject', async () => {
     await registerRepository.create(register);
-    const result = await registerRepository.findSubjectsByStudent(register.idStudent);
-    const expected = (await subjectRepository.findAll()).map(subject => {
-      return subject.id;
-    });
-    expect(expected).toEqual(expect.arrayContaining(result));
+    const result = await registerRepository.findSubjectsByStudent(
+      register.idStudent
+    );
+
+    expect(result).toContain(subject.id);
     await registerRepository.delete(register.idStudent, register.idSubject);
-  },10000);
+  }, 10000);
 
   it('should be able to find a student by idStudent', async () => {
     await registerRepository.create(register);
-    const result = await registerRepository.findStudentsBySubject(register.idSubject);
+    const result = await registerRepository.findStudentsBySubject(
+      register.idSubject
+    );
     const expected = (await studentRepository.findAll()).map(student => {
       return student.id;
     });
     expect(expected).toEqual(expect.arrayContaining(result));
     await registerRepository.delete(register.idStudent, register.idSubject);
-  },10000);
-
+  });
 });

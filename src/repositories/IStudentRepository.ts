@@ -1,4 +1,5 @@
 import { Student } from "../models/Student";
+import { Subject } from '../models/Subject';
 
 export default interface IStudentRepository{
     findAll(): Promise<Student[]>;
@@ -9,4 +10,5 @@ export default interface IStudentRepository{
     update(student: Student): Promise<Student>;
     modifyStateStudent(student: Student): Promise<Student>;
     delete(id: number): Promise<Student>;
+    getSubjectsByIds(ids: number[]): Promise<Student[]>;
 }

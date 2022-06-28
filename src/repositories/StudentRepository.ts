@@ -129,4 +129,15 @@ export default class StudentRepository implements IStudentRepository {
     await this._db.deleteOne({ id: id }).then((result) => result);
     return studentToDelete;
   }
+
+  /**
+   * Get list of students by id
+   * @param ids list of ids of the students to get
+   */
+  async getSubjectsByIds(ids: number[]): Promise<Student[]> {
+    return (await this._db
+      .find({ id: { $in: ids } })
+      .toArray()
+      .then(result => result)) as Student[];
+  }
 }

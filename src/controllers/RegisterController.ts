@@ -2,6 +2,7 @@ import RegisterService from '../services/RegisterService';
 import { Router, Request, Response } from 'express';
 import { IController } from './IController';
 import { Errors as error } from '../utils/ErrorResponses';
+import { SuccessfulResponses as success } from '../utils/SuccesfulResponses';
 
 export default class RegisterController implements IController {
   private _registerService: RegisterService;
@@ -110,10 +111,10 @@ export default class RegisterController implements IController {
     await this._registerService
       .getAll()
       .then((data) => {
-        res.status(200).json(data);
+        success.S200(res, 'OK', data);
       })
       .catch((err) => {
-        res.status(500).json(err);
+        this.handleError(err, res);
       });
   };
 
@@ -133,7 +134,7 @@ export default class RegisterController implements IController {
    *         schema:
    *           $ref: '#/components/schemas/CreateRegistration'
    *    responses:
-   *      200:
+   *      201:
    *        description: Created Registration
    *        content:
    *          application/json:
@@ -173,7 +174,7 @@ export default class RegisterController implements IController {
       await this._registerService
         .create(req.body)
         .then((data) => {
-          res.status(200).json(data);
+          success.S201(res, 'Register created successfully', data);
         })
         .catch((err) => {
           this.handleError(err, res);
@@ -183,28 +184,56 @@ export default class RegisterController implements IController {
 
   /**
    * @openapi
-   * /Registrations/student/{id_student}:
+   * /registrations/student/{id_student}:
    *  get:
    *    tags:
    *     - Registrations
-   *    summary: Gets ALL id_subjects by id_student
+   *    summary: Gets ALL subjects by id_student
    *    responses:
    *      200:
    *        description: App is up and running
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: array
+   *              items:
+   *                $ref: '#/components/schemas/CreateSubject'
+   *      404:
+   *        description: Not found student
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/ErrorHTTP'
+   *      400:
+   *        description: Bad request
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/ErrorHTTP'
+   *      500:
+   *        description: Failed to get subjects
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/ErrorHTTP'
    *    parameters:
    *      - name: id_student
    *        in: path
+   *        description: ID of the student
+   *        required: true
+   *        schema:
+   *          type: number
+   *          example: 1656383737153
    */
   public getSubjectsByStudentId = async (req: Request, res: Response) => {
     if (!req.params.id) {
-      res.status(400).json({
-        message: 'Missing id_Student parameter'
-      });
+      error.E400(res, 'Missing body parameter');
+      return;
     } else if (req.params.id.match(/^\d+$/)) {
       await this._registerService
         .findSubjectsByStudent(Number(req.params.id))
         .then((data) => {
-          res.status(200).json(data);
+          success.S200(res, 'OK', data);
         })
         .catch((err) => {
           this.handleError(err, res);
@@ -218,25 +247,52 @@ export default class RegisterController implements IController {
    *  get:
    *    tags:
    *     - Registrations
-   *    summary: Get ALL id_students by id_subject
-   *
+   *    summary: Get ALL students by id_subject
    *    responses:
    *      200:
    *        description: App is up and running
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: array
+   *              items:
+   *                $ref: '#/components/schemas/CreateStudent'
+   *      404:
+   *        description: Not found subject
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/ErrorHTTP'
+   *      400:
+   *        description: Bad request
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/ErrorHTTP'
+   *      500:
+   *        description: Failed to get subjects
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/ErrorHTTP'
    *    parameters:
    *      - name: id_subject
    *        in: path
+   *        description: ID of the subject
+   *        required: true
+   *        schema:
+   *          type: number
+   *          example: 1656398025203
    */
   public getStudentsBySubjectId = async (req: Request, res: Response) => {
     if (!req.params.id) {
-      res.status(400).json({
-        message: 'Missing id_Student parameter'
-      });
+      error.E400(res, 'Missing body parameter');
+      return;
     } else if (req.params.id.match(/^\d+$/)) {
       await this._registerService
         .findStudentsBySubject(Number(req.params.id))
         .then((data) => {
-          res.status(200).json(data);
+          success.S200(res, 'OK', data);
         })
         .catch((err) => {
           this.handleError(err, res);

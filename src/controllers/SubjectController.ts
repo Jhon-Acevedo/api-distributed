@@ -1,6 +1,8 @@
 import SubjectService from '../services/SubjectService';
 import { IController } from './IController';
 import { Request, Response, Router } from 'express';
+import { Errors as error } from '../utils/ErrorResponses';
+import { SuccessfulResponses as success } from '../utils/SuccesfulResponses';
 
 export default class SubjectController implements IController {
   private readonly _subjectService: SubjectService;
@@ -41,11 +43,11 @@ export default class SubjectController implements IController {
   public getAll = async (req: Request, res: Response) => {
     await this._subjectService
       .getAll()
-      .then((data) => {
+      .then(data => {
         res.status(200).json(data);
       })
-      .catch((err) => {
-        res.status(500).json(err);
+      .catch(err => {
+        this.handleErrors(err, res);
       });
   };
 
@@ -75,25 +77,14 @@ export default class SubjectController implements IController {
     } else if (req.params.id.match(/^\d+$/)) {
       await this._subjectService
         .getById(Number(req.params.id))
-        .then((data) => {
+        .then(data => {
           res.status(200).json(data);
         })
-        .catch((err) => {
+        .catch(err => {
           this.handleErrors(err, res);
         });
     }
   };
-
-  handleErrors(err: Error, res: Response) {
-    switch (err.message) {
-      case 'Subject not found':
-        res.status(404).json(err);
-        break;
-      case 'Invalid id':
-        res.status(400).json(err);
-        break;
-    }
-  }
 
   /**
    * Create a new subject
@@ -104,19 +95,17 @@ export default class SubjectController implements IController {
   public createSubject = async (req: Request, res: Response) => {
     console.log(req.body);
     if (!req.body.name) {
-      res.status(400).json({
-        message: 'Missing body parameter'
-      });
-    } else {
-      await this._subjectService
-        .create(req.body)
-        .then((data) => {
-          res.status(201).json({ message: 'Subject created', subject: data });
-        })
-        .catch((err) => {
-          res.status(500).json({ message: err.message });
-        });
+      error.E400(res, 'Missing body parameter');
+      return;
     }
+    await this._subjectService
+      .create(req.body)
+      .then(data => {
+        success.S201(res, 'Subject created successfully', data);
+      })
+      .catch(err => {
+        this.handleErrors(err, res);
+      });
   };
 
   /**
@@ -127,17 +116,17 @@ export default class SubjectController implements IController {
    */
   public updateSubject = async (req: Request, res: Response) => {
     if (!req.params.id) {
-      res.status(400).json({
-        message: 'Missing id parameter'
-      });
-    } else if (req.params.id.match(/^\d+$/)) {
+      error.E400(res, 'Missing id parameter');
+      return;
+    }
+    if (req.params.id.match(/^\d+$/)) {
       await this._subjectService
         .editSubject(Number(req.params.id), req.body)
-        .then((data) => {
-          res.status(200).json({ message: 'Subject updated', subject: data });
+        .then(data => {
+          success.S200(res, 'Subject updated successfully', data);
         })
-        .catch((err) => {
-          res.status(500).json({ message: err.message });
+        .catch(err => {
+          this.handleErrors(err, res);
         });
     }
   };
@@ -150,18 +139,39 @@ export default class SubjectController implements IController {
    */
   public deleteSubject = async (req: Request, res: Response) => {
     if (!req.params.id) {
-      res.status(400).json({
-        message: 'Missing id parameter'
-      });
-    } else if (req.params.id.match(/^\d+$/)) {
-      await this._subjectService
-        .delete(Number(req.params.id))
-        .then((data) => {
-          res.status(200).json({ message: 'Subject deleted', subject: data });
-        })
-        .catch((err) => {
-          res.status(500).json({ message: err.message });
-        });
+      error.E400(res, 'Missing id parameter');
+      return;
     }
+    if (!req.params.id.match(/^\d+$/)) {
+      error.E400(res, 'Invalid id ( must be a number )');
+      return;
+    }
+    await this._subjectService
+      .delete(Number(req.params.id))
+      .then(data => {
+        success.S200(res, 'Subject deleted successfully', data);
+      })
+      .catch(err => {
+        this.handleErrors(err, res);
+      });
   };
+
+  /**
+   * Handle errors and send response
+   * @param err error object
+   * @param res response object
+   */
+  handleErrors(err: Error, res: Response) {
+    switch (err.message) {
+      case 'Subject not found':
+        error.E404(res, err.message);
+        break;
+      case 'Subject already exists':
+        error.E409(res, err.message);
+        break;
+      default:
+        error.E500(res, err.message);
+        break;
+    }
+  }
 }

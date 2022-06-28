@@ -29,6 +29,13 @@ export const Errors = {
       message: message
     });
   },
+  E409: (res: Response, message: string) => {
+    res.status(409).json({
+      code: 409,
+      error: 'Conflict',
+      message: message
+    });
+  },
   E500: (res: Response, message: string) => {
     res.status(500).json({
       code: 500,

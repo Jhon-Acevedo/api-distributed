@@ -24,7 +24,11 @@ export default class SubjectRepository implements ISubjectRepository {
    */
   // TODO: controls if it want to add a new slot, don't add if it's already full
   async addSlotAvailable(id: number): Promise<Subject> {
-    await this._db.updateOne({ id: id }, { $inc: { availableSlots: 1 } });
+    await this.findById(id).then(subject => {
+      if (subject.availableSlots >= subject.slots)
+        throw new Error('Subject is already full');
+      this._db.updateOne({ id: id }, { $inc: { availableSlots: 1 } });
+    });
     return await this.findById(id);
   }
 
@@ -32,10 +36,18 @@ export default class SubjectRepository implements ISubjectRepository {
    * Change the total slots of a subject (only if it's less than the current total slots)
    * @param id id of the subject
    * @param totalSlots new total slots
+   * @param availableSlots new available slots
    * @returns the updated subject
    */
-  async changeTotalSlots(id: number, totalSlots: number): Promise<Subject> {
-    await this._db.updateOne({ id: id }, { $set: { slots: totalSlots } });
+  async changeTotalSlots(
+    id: number,
+    totalSlots: number,
+    availableSlots: number
+  ): Promise<Subject> {
+    await this._db.updateOne(
+      { id: id },
+      { $set: { slots: totalSlots, availableSlots: availableSlots } }
+    );
     return await this.findById(id);
   }
 
@@ -45,10 +57,13 @@ export default class SubjectRepository implements ISubjectRepository {
    * @returns the created subject
    */
   async create(subject: Subject): Promise<Subject> {
+    await this.exist(subject.id).then(exists => {
+      if (exists) throw new Error('Subject already exists');
+    });
     const inserted = await this._db.insertOne(subject);
     return (await this._db
       .findOne({ _id: inserted.insertedId })
-      .then((result) => result)) as Subject;
+      .then(result => result)) as Subject;
   }
 
   /**
@@ -58,7 +73,7 @@ export default class SubjectRepository implements ISubjectRepository {
    */
   async delete(id: number): Promise<Subject> {
     const subjectToDelete = this.findById(id);
-    await this._db.deleteOne({ id: id }).then((result) => result);
+    await this._db.deleteOne({ id: id }).then(result => result);
     return subjectToDelete;
   }
 
@@ -69,7 +84,9 @@ export default class SubjectRepository implements ISubjectRepository {
    * @returns the updated subject
    */
   async editName(id: number, name: string): Promise<Subject> {
-    await this._db.updateOne({ id: id }, { $set: { name: name } });
+    await this.findById(id).then(() => {
+      this._db.updateOne({ id: id }, { $set: { name: name } });
+    });
     return await this.findById(id);
   }
 
@@ -81,7 +98,7 @@ export default class SubjectRepository implements ISubjectRepository {
     return (await this._db
       .find()
       .toArray()
-      .then((result) => {
+      .then(result => {
         return result;
       })) as Subject[];
   }
@@ -92,9 +109,20 @@ export default class SubjectRepository implements ISubjectRepository {
    * @returns the found subject
    */
   async findById(id: number): Promise<Subject> {
-    return (await this._db.findOne({ id: id }).then((result) => {
+    return (await this._db.findOne({ id: id }).then(result => {
+      if (result === null) throw new Error('Subject not found');
       return result;
     })) as Subject;
+  }
+
+  /**
+   * Find if a subject exists in the database
+   * @param id id of the subject to find
+   */
+  async exist(id: number): Promise<boolean> {
+    return await this.findById(id)
+      .then(() => true)
+      .catch(() => false);
   }
 
   /**
@@ -103,7 +131,11 @@ export default class SubjectRepository implements ISubjectRepository {
    * @returns the updated subject
    */
   async removeSlotAvailable(id: number): Promise<Subject> {
-    await this._db.updateOne({ id: id }, { $inc: { availableSlots: -1 } });
+    await this.findById(id).then(subject => {
+      if (subject.availableSlots <= 0)
+        throw new Error('Subject is already empty');
+      this._db.updateOne({ id: id }, { $inc: { availableSlots: -1 } });
+    });
     return await this.findById(id);
   }
 
@@ -113,19 +145,9 @@ export default class SubjectRepository implements ISubjectRepository {
    * @returns the updated subject
    */
   async update(subject: Subject): Promise<Subject> {
-    await this._db.updateOne(
-      { id: subject.id },
-      {
-        $set: {
-          name: subject.name,
-          credits: subject.credits,
-          code: subject.code,
-          slots: subject.slots,
-          availableSlots: subject.availableSlots,
-          status: subject.status
-        }
-      }
-    );
+    await this.findById(subject.id).then(() => {
+      this._db.updateOne({ id: subject.id }, { $set: subject });
+    });
     return await this.findById(subject.id);
   }
 }

@@ -1,6 +1,7 @@
 import RegisterService from '../services/RegisterService';
 import { Router, Request, Response } from 'express';
 import { IController } from './IController';
+import { Errors as error } from '../utils/ErrorResponses';
 
 export default class RegisterController implements IController {
   private _registerService: RegisterService;
@@ -74,6 +75,16 @@ export default class RegisterController implements IController {
    *       example:
    *         idStudent: 1655829917379
    *         idSubject: 1
+   *     ErrorHTTP:
+   *       type: object
+   *       required:
+   *         - code
+   *         - error
+   *         - message
+   *       example:
+   *         code: 400
+   *         error: Bad Request
+   *         message: Invalid request
    */
 
   /**
@@ -127,9 +138,31 @@ export default class RegisterController implements IController {
    *        content:
    *          application/json:
    *            schema:
-   *
+   *              $ref: '#/components/schemas/CreateRegistration'
+   *      404:
+   *        description: Not found student or subject
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/ErrorHTTP'
+   *      400:
+   *        description: Bad request
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/ErrorHTTP'
+   *      409:
+   *        description: Conflict
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/ErrorHTTP'
    *      500:
    *        description: Failed to create registration
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/ErrorHTTP'
    */
   public createRegister = async (req: Request, res: Response) => {
     if (!req.body.idStudent || !req.body.idSubject) {
@@ -143,7 +176,7 @@ export default class RegisterController implements IController {
           res.status(200).json(data);
         })
         .catch((err) => {
-          res.status(500).json(err);
+          this.handleError(err, res);
         });
     }
   };
@@ -174,7 +207,7 @@ export default class RegisterController implements IController {
           res.status(200).json(data);
         })
         .catch((err) => {
-          res.status(500).json(err);
+          this.handleError(err, res);
         });
     }
   };
@@ -210,15 +243,6 @@ export default class RegisterController implements IController {
         });
     }
   };
-
-  handleError = (err: any, res: Response) => {
-    switch (err.message) {
-      case 'Student not found':
-        res.status(404).json(err.message);
-        break;
-    }
-  };
-
 
   /**
    * @openapi
@@ -259,6 +283,23 @@ export default class RegisterController implements IController {
         .catch((err) => {
           res.status(500).json(err);
         });
+    }
+  };
+
+  handleError = (err: any, res: Response) => {
+    switch (err.message) {
+      case 'Student not found':
+        error.E404(res, err.message);
+        break;
+      case 'Subject not found':
+        error.E404(res, err.message);
+        break;
+      case 'Register already exists':
+        error.E409(res, err.message);
+        break;
+      default:
+        error.E500(res, err.message);
+        break;
     }
   };
 }

@@ -2,6 +2,7 @@ import { Collection, MongoClient } from 'mongodb';
 import IRegisterRepository from './IRegisterRepository';
 import { IConnection } from '../connectionDB/IConnection';
 import { Register } from '../models/Register';
+import { Subject } from '../models/Subject';
 
 export default class RegisterRepository implements IRegisterRepository {
   private _dbConnection: IConnection;
@@ -13,6 +14,21 @@ export default class RegisterRepository implements IRegisterRepository {
     this._db = (this._dbConnection.client as MongoClient)
       .db(process.env.DB_NAME)
       .collection(process.env.REGISTRATION_COLLECTION_NAME as string);
+  }
+
+  /**
+   * Find a register from the database by idStudent and idSubject
+   * @param student_id student_id of the register to find
+   * @param subject_id subject_id of the register to find
+   * @returns the found register
+   */
+  async findById(student_id: number, subject_id: number): Promise<Register> {
+    return (await this._db
+      .findOne({
+        idStudent: student_id,
+        idSubject: subject_id
+      })
+      .then((result) => result)) as Register;
   }
 
   /**
@@ -42,7 +58,7 @@ export default class RegisterRepository implements IRegisterRepository {
    * @param student_id subject_id of the subject to find
    * @returns array of id_subjects
    */
-  async findSubjectsByStudent(student_id: number): Promise<number[]> {
+  async findSubjectsByStudent(student_id: number): Promise<any[]> {
     const student = await this._db.find({ idStudent: student_id }).toArray();
     return student.map((register) => register.idSubject);
   }

@@ -53,15 +53,20 @@ describe('RegisterService', () => {
       idSubject: subject.id,
       dateRegister: new Date()
     } as Register;
+
+    await studentRepository.create(student);
+    await subjectRepository.create(subject);
   });
 
   afterEach(async () => {
+    await studentRepository.delete(student.id).catch(() => console.log(''));
+    await subjectRepository.delete(subject.id).catch(() => console.log(''));
     await dbConnection.disconnect();
   });
 
   it('should be defined', () => {
     expect(registerService).toBeDefined();
-  });
+  }, 20000);
 
   it('should be able to create a new register', async () => {
     await subjectRepository.exist(subject.id).then(async exist => {
@@ -74,5 +79,5 @@ describe('RegisterService', () => {
     const result = await registerService.getAll();
     expect(result).toContainEqual(register);
     await registerService.delete(register.idStudent, register.idSubject);
-  });
+  }, 20000);
 });

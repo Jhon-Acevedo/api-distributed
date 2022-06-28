@@ -27,7 +27,7 @@ export default class SubjectController implements IController {
     this.router.delete(`${this.path}/:id`, this.deleteSubject);
   }
 
-/**
+  /**
    * @openapi
    * components:
    *  schemas:
@@ -41,7 +41,7 @@ export default class SubjectController implements IController {
    *         - slots
    *         - availableSlots
    *         - status
-   *         
+   *
    *       properties:
    *         id:
    *           type: number
@@ -80,26 +80,13 @@ export default class SubjectController implements IController {
    *           required: true
    *       example:
    *         id: 1
-	 *         name: Calculo
-	 *         code: calculo12
-	 *         slots: 20
-	 *         availableSlots: 20
-	 *         credits: 5
-	 *         status: true
-   * 
-   *     DeleteSubject:
-   *       type: object
-   *       required:
-   *         - id
-   *       properties:       
-   *         id:
-   *           type: number
-   *           description: ID of the subject
-   *           format: int64
-   *           required: true
-   *       example:
-   *         idSubject: 1
-   * 
+   *         name: Calculo
+   *         code: calculo12
+   *         slots: 20
+   *         availableSlots: 20
+   *         credits: 5
+   *         status: true
+   *
    *     UpdateSubject:
    *       type: object
    *       required:
@@ -110,7 +97,7 @@ export default class SubjectController implements IController {
    *         - slots
    *         - availableSlots
    *         - status
-   *         
+   *
    *       properties:
    *         id:
    *           type: number
@@ -149,14 +136,14 @@ export default class SubjectController implements IController {
    *           required: false
    *       example:
    *         id: 12
-	 *         name: Calculo
-	 *         code: calculo12
-	 *         slots: 20
-	 *         availableSlots: 20
-	 *         credits: 5
-	 *         status: true
-   *  
-   *     
+   *         name: Calculo
+   *         code: calculo12
+   *         slots: 20
+   *         availableSlots: 20
+   *         credits: 5
+   *         status: true
+   *
+   *
    */
 
   /**
@@ -208,24 +195,26 @@ export default class SubjectController implements IController {
    */
   public getById = async (req: Request, res: Response) => {
     if (!req.params.id) {
-      res.status(400).json({
-        message: 'Missing id parameter'
-      });
-    } else if (req.params.id.match(/^\d+$/)) {
-      await this._subjectService
-        .getById(Number(req.params.id))
-        .then(data => {
-          res.status(200).json(data);
-        })
-        .catch(err => {
-          this.handleErrors(err, res);
-        });
+      error.E400(res, 'Missing id parameter');
+      return;
     }
+    if (!req.params.id.match(/^\d+$/)) {
+      error.E400(res, 'Invalid id parameter ( must be a number )');
+      return;
+    }
+    await this._subjectService
+      .getById(Number(req.params.id))
+      .then(data => {
+        success.S200(res, 'Subject found', data);
+      })
+      .catch(err => {
+        this.handleErrors(err, res);
+      });
   };
 
   /**
    * @openapi
-   * /newSubject:
+   * /subjects:
    *  post:
    *    tags:
    *      - Subject
@@ -269,9 +258,9 @@ export default class SubjectController implements IController {
       });
   };
 
-   /**
+  /**
    * @openapi
-   * /updateSubject:
+   * /subjects/{id}:
    *  put:
    *    tags:
    *      - Subject
@@ -318,18 +307,11 @@ export default class SubjectController implements IController {
 
   /**
    * @openapi
-   * /deleteSubject:
+   * /subjects/{id}:
    *  delete:
    *    tags:
    *      - Subject
    *    summary: Delete a subject by id
-   *    requestBody:
-   *     description: Optional description in *markdown*
-   *     required: true
-   *     content:
-   *       application/json:
-   *         schema:
-   *           $ref: '#/components/schemas/DeleteSubject'
    *    responses:
    *      200:
    *        description: If it gets all subjects successfully
@@ -344,6 +326,8 @@ export default class SubjectController implements IController {
    *    parameters:
    *       - name: id
    *         in: path
+   *         required: true
+   *         description: Id of subject to delete
    
    */
   public deleteSubject = async (req: Request, res: Response) => {

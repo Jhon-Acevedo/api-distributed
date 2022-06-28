@@ -72,7 +72,7 @@ export default class SubjectRepository implements ISubjectRepository {
    * @returns the deleted subject
    */
   async delete(id: number): Promise<Subject> {
-    const subjectToDelete = this.findById(id);
+    const subjectToDelete = await this.findById(id);
     await this._db.deleteOne({ id: id }).then(result => result);
     return subjectToDelete;
   }
@@ -141,12 +141,13 @@ export default class SubjectRepository implements ISubjectRepository {
 
   /**
    * Update a subject in the database
+   * @param id id of the subject to update
    * @param subject new data of the subject to update
    * @returns the updated subject
    */
-  async update(subject: Subject): Promise<Subject> {
-    await this.findById(subject.id).then(() => {
-      this._db.updateOne({ id: subject.id }, { $set: subject });
+  async update(id: number, subject: Subject): Promise<Subject> {
+    await this.findById(id).then(() => {
+      this._db.updateOne({ id: id }, { $set: subject });
     });
     return await this.findById(subject.id);
   }

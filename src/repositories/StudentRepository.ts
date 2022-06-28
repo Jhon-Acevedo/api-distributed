@@ -103,9 +103,9 @@ export default class StudentRepository implements IStudentRepository {
    */
    async modifyStateStudent(student: Student): Promise<Student> {
     await this._db.updateOne(
-      { id: student.id },
+      { id: student.id,  },
       {
-        $set: {
+         $set: {
           document_number: student.document_number,
           document_type: student.document_type,
           name: student.name,
@@ -113,7 +113,7 @@ export default class StudentRepository implements IStudentRepository {
           student_code: student.student_code,
           email: student.email,
           state: student.state
-        }
+         }
       }
     );
     return await this.findById(student.id);

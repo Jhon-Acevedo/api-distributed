@@ -54,7 +54,7 @@ export default class RegisterController implements IController {
    *       example:
    *         idStudent: 1655829917379
    *         idSubject: 1
-   *         date: 2022-01-01
+   *         dateRegister: 2022-01-01
    *     DeleteRegistration:
    *       type: object
    *       required:

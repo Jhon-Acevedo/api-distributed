@@ -69,7 +69,7 @@ export default class StudentService {
    * @returns the updated student
    */
   async editStudent(id: number, student: Student): Promise<Student> {
-    return await this._studentRepository.update(student);
+    return await this._studentRepository.update(id, student);
   }
 
   /**
@@ -79,6 +79,6 @@ export default class StudentService {
    * @returns the updated student
    */
   async modifyStateStudent(id: number, student: Student): Promise<Student> {
-    return await this._studentRepository.modifyStateStudent(student);
+    return await this._studentRepository.modifyStateStudent(id, student);
   }
 }

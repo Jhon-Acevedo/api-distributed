@@ -320,6 +320,7 @@ export default class SubjectController implements IController {
    
    */
   public deleteSubject = async (req: Request, res: Response) => {
+    console.log(req);
     if (!req.params.id) {
       error.E400(res, 'Missing id parameter');
       return;

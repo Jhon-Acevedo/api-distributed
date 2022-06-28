@@ -32,6 +32,9 @@ export default class StudentController implements IController {
     this.router.put(`${this.path}/:id`, this.updateStudent);
     this.router.patch(`${this.path}/:id`, this.modifyStateStudent);
     this.router.delete(`${this.path}/:id`, this.deleteStudent);
+    this.router.delete(this.path, (_, res) => {
+      error.E405(res, 'Method not allowed');
+    });
   }
 
   /**

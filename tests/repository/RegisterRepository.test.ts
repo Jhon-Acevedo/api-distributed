@@ -37,10 +37,10 @@ describe('RegisterRepository', () => {
     };
 
     subject = {
-      id: 1,
-      name: 'Calculo I',
+      id: 2,
+      name: 'Calculo II',
       credits: 3,
-      code: '1000MAT',
+      code: '1001CAL',
       slots: 3,
       availableSlots: 3,
       status: true
@@ -81,7 +81,7 @@ describe('RegisterRepository', () => {
     });
     expect(expected).toEqual(expect.arrayContaining(result));
     await registerRepository.delete(register.idStudent, register.idSubject);
-  });
+  },10000);
 
   it('should be able to find a student by idStudent', async () => {
     await registerRepository.create(register);
@@ -91,6 +91,6 @@ describe('RegisterRepository', () => {
     });
     expect(expected).toEqual(expect.arrayContaining(result));
     await registerRepository.delete(register.idStudent, register.idSubject);
-  });
+  },10000);
 
 });

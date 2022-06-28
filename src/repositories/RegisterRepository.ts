@@ -32,7 +32,7 @@ export default class RegisterRepository implements IRegisterRepository {
    * @param subject_id subject_id of the subject to find
    * @returns array of id_students
    */
-  async findStudentsBySubject(subject_id: number): Promise<any> {
+  async findStudentsBySubject(subject_id: number): Promise<number[]> {
     const subjects = await this._db.find({ idSubject: subject_id }).toArray();
     return subjects.map((register) => register.idStudent);
   }
@@ -42,7 +42,7 @@ export default class RegisterRepository implements IRegisterRepository {
    * @param student_id subject_id of the subject to find
    * @returns array of id_subjects
    */
-  async findSubjectsByStudent(student_id: number): Promise<any> {
+  async findSubjectsByStudent(student_id: number): Promise<number[]> {
     const student = await this._db.find({ idStudent: student_id }).toArray();
     return student.map((register) => register.idSubject);
   }

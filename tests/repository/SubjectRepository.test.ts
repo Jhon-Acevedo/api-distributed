@@ -11,11 +11,9 @@ describe('SubjectRepository', () => {
 
   beforeEach(async () => {
     dbConnection = new ConnectionMongo();
-    [subjectRepository] = await Promise.all([
-      new SubjectRepository(dbConnection)
-    ]);
+    subjectRepository = await new SubjectRepository(dbConnection);
     subject = {
-      id: new Date().valueOf(),
+      id: new Date().getTime(),
       name: 'Test',
       code: 'code',
       slots: 10,
@@ -63,8 +61,11 @@ describe('SubjectRepository', () => {
     const result = await subjectRepository.findById(subject.id);
     expect(result).toEqual(subject);
     await subjectRepository.delete(subject.id);
-    const result2 = await subjectRepository.findById(subject.id);
-    expect(result2).toBeNull();
+    await subjectRepository.findById(subject.id).catch(err => {
+      expect(err).toBeDefined();
+      expect(err.message).toBe('Subject not found');
+      expect(true).toBeTruthy();
+    });
   });
 
   it('should be able to edit a subject name', async () => {
@@ -83,7 +84,11 @@ describe('SubjectRepository', () => {
     const result = await subjectRepository.findById(subject.id);
     expect(result).toEqual(subject);
     subject.slots = 20;
-    await subjectRepository.changeTotalSlots(subject.id, subject.slots);
+    await subjectRepository.changeTotalSlots(
+      subject.id,
+      subject.slots,
+      subject.availableSlots
+    );
     const result2 = await subjectRepository.findById(subject.id);
     expect(result2).toEqual(subject);
     await subjectRepository.delete(subject.id);
@@ -104,8 +109,10 @@ describe('SubjectRepository', () => {
     await subjectRepository.create(subject);
     const result = await subjectRepository.findById(subject.id);
     expect(result).toEqual(subject);
+    await subjectRepository.changeTotalSlots(subject.id, 2, 1);
     await subjectRepository.addSlotAvailable(subject.id);
-    subject.availableSlots++;
+    subject.slots = 2;
+    subject.availableSlots = 2;
     const result2 = await subjectRepository.findById(subject.id);
     expect(result2).toEqual(subject);
     await subjectRepository.delete(subject.id);

@@ -50,6 +50,6 @@ export default class SubjectService {
    * @returns the updated subject
    */
   async editSubject(id: number, subject: Subject): Promise<Subject> {
-    return await this._subjectRepository.update(subject);
+    return await this._subjectRepository.update(id, subject);
   }
 }

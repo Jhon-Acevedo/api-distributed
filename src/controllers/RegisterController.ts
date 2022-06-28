@@ -3,6 +3,7 @@ import { Router, Request, Response } from 'express';
 import { IController } from './IController';
 import { Errors as error } from '../utils/ErrorResponses';
 import { SuccessfulResponses as success } from '../utils/SuccesfulResponses';
+import * as HTTP from 'http';
 
 export default class RegisterController implements IController {
   private _registerService: RegisterService;
@@ -316,32 +317,35 @@ export default class RegisterController implements IController {
    *         schema:
    *           $ref: '#/components/schemas/DeleteRegistration'
    *    responses:
-   *      200:
+   *      204:
    *        description: Deleted Registration
+   *      500:
+   *        description: Failed to remove registration
    *        content:
    *          application/json:
    *            schema:
-   *              $ref: '#/components/schemas/DeleteRegistration'
-   *      500:
-   *        description: Failed to remove registration
+   *              $ref: '#/components/schemas/ErrorHTTP'
    */
   public deleteRegister = async (req: Request, res: Response) => {
     if (!req.body.idStudent || !req.body.idSubject) {
-      res.status(400).json({
-        message: 'Missing idStudent or idSubject parameter'
-      });
-    } else {
-      await this._registerService
-        .delete(req.body.idStudent, req.body.idSubject)
-        .then((data) => {
-          res.status(200).json(data);
-        })
-        .catch((err) => {
-          res.status(500).json(err);
-        });
+      error.E400(res, 'Missing id parameter');
+      return;
     }
+    await this._registerService
+      .delete(req.body.idStudent, req.body.idSubject)
+      .then((data) => {
+        success.S204(res, 'Subject deleted successfully');
+      })
+      .catch((err) => {
+        this.handleError(err, res);
+      });
   };
 
+  /**
+   * Handle errors and send response
+   * @param err error object
+   * @param res response object
+   */
   handleError = (err: any, res: Response) => {
     switch (err.message) {
       case 'Student not found':
@@ -353,9 +357,13 @@ export default class RegisterController implements IController {
       case 'Register already exists':
         error.E409(res, err.message);
         break;
+      case 'No available slots':
+        error.E409(res, err.message);
+        break;
       default:
         error.E500(res, err.message);
         break;
     }
   };
+
 }

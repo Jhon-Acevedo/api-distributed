@@ -26,6 +26,8 @@ class App {
   }
 
   public listen() {
+    // configure core for swaggerRouter
+    this.app.use('/api-docs', swaggerRouter);
     this.app.listen(this.port, () => {
       console.log(`App listening on the port ${this.port}`);
       swaggerRouter(this.app);

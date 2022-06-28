@@ -52,4 +52,12 @@ export default class SubjectService {
   async editSubject(id: number, subject: Subject): Promise<Subject> {
     return await this._subjectRepository.update(id, subject);
   }
+
+  /**
+   * Find all subjects by id in the database
+   * @param ids ids of the subjects to find
+   */
+  async getSubjectsByIds(ids: number[]): Promise<Subject[]> {
+    return await this._subjectRepository.getSubjectsByIds(ids);
+  }
 }

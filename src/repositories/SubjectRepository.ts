@@ -151,4 +151,17 @@ export default class SubjectRepository implements ISubjectRepository {
     });
     return await this.findById(subject.id);
   }
+
+  /**
+   * Get list of subjects by id
+   * @param ids list of ids of the subjects to get
+   */
+  async getSubjectsByIds(ids: number[]): Promise<Subject[]> {
+    return (await this._db
+      .find({ id: { $in: ids } })
+      .toArray()
+      .then(result => {
+        return result;
+      })) as Subject[];
+  }
 }

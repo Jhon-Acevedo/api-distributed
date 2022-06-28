@@ -36,7 +36,10 @@ export default class RegisterService {
       throw new Error('Student not found');
     } else if (await this._subjectRepository.findById(register.idSubject) === null) {
       throw new Error('Subject not found');
+    } else if (await this._registerRepository.findById(register.idStudent, register.idSubject) !== null) {
+      throw new Error('Register already exists');
     } else {
+      await this._subjectRepository.removeSlotAvailable(register.idSubject);
       return await this._registerRepository.create(register);
     }
   }
@@ -46,12 +49,12 @@ export default class RegisterService {
    * @param student_id subject_id of the subject to find
    * @returns array of id_subjects
    */
-  async findSubjectsByStudent(student_id: number): Promise<number[]> {
-    // if (await this._studentRepository.findById(student_id) === null) {
-    //   throw new Error('Student not found');
-    // } else {
-    return await this._registerRepository.findSubjectsByStudent(student_id);
-    // }
+  async findSubjectsByStudent(student_id: number): Promise<Subject[]> {
+    if (await this._studentRepository.findById(student_id) === null) {
+      throw new Error('Student not found');
+    } else {
+      return await this._subjectRepository.getSubjectsByIds(await this._registerRepository.findSubjectsByStudent(student_id));
+    }
   }
 
   /**
@@ -77,6 +80,7 @@ export default class RegisterService {
     if (await this._studentRepository.findById(student_id) === null || await this._subjectRepository.findById(subject_id) === null) {
       throw new Error('Student or Subject not found');
     } else {
+      await this._subjectRepository.addSlotAvailable(subject_id);
       return await this._registerRepository.delete(student_id, subject_id);
     }
   }

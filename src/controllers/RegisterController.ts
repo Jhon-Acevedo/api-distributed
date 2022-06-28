@@ -3,7 +3,6 @@ import { Router, Request, Response } from 'express';
 import { IController } from './IController';
 import { Errors as error } from '../utils/ErrorResponses';
 import { SuccessfulResponses as success } from '../utils/SuccesfulResponses';
-import * as HTTP from 'http';
 
 export default class RegisterController implements IController {
   private _registerService: RegisterService;
@@ -55,8 +54,8 @@ export default class RegisterController implements IController {
    *           format: date
    *           required: true
    *       example:
-   *         idStudent: 1655829917379
-   *         idSubject: 1
+   *         idStudent: 1656383737153
+   *         idSubject: 1656397734504
    *         dateRegister: 2022-01-01
    *     DeleteRegistration:
    *       type: object
@@ -75,8 +74,8 @@ export default class RegisterController implements IController {
    *           format: int64
    *           required: true
    *       example:
-   *         idStudent: 1655829917379
-   *         idSubject: 1
+   *         idStudent: 1656383737153
+   *         idSubject: 1656397734504
    *     ErrorHTTP:
    *       type: object
    *       required:
@@ -283,7 +282,7 @@ export default class RegisterController implements IController {
    *        required: true
    *        schema:
    *          type: number
-   *          example: 1656398025203
+   *          example: 1656398096056
    */
   public getStudentsBySubjectId = async (req: Request, res: Response) => {
     if (!req.params.id) {
@@ -308,7 +307,6 @@ export default class RegisterController implements IController {
    *    tags:
    *      - Registrations
    *    summary: Remove a registration
-   *
    *    requestBody:
    *     description: Optional description in *markdown*
    *     required: true
@@ -333,7 +331,7 @@ export default class RegisterController implements IController {
     }
     await this._registerService
       .delete(req.body.idStudent, req.body.idSubject)
-      .then((data) => {
+      .then(() => {
         success.S204(res, 'Subject deleted successfully');
       })
       .catch((err) => {
@@ -365,5 +363,4 @@ export default class RegisterController implements IController {
         break;
     }
   };
-
 }

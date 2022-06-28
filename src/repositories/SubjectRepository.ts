@@ -51,6 +51,10 @@ export default class SubjectRepository implements ISubjectRepository {
     return await this.findById(id);
   }
 
+  async getAvailableSlots(id: number): Promise<number> {
+    return (await this.findById(id).then(subject => subject.availableSlots)) as number;
+  }
+
   /**
    * Create a new subject in the database
    * @param subject subject to create

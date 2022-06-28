@@ -32,6 +32,9 @@ export default class StudentController implements IController {
     this.router.put(`${this.path}/:id`, this.updateStudent);
     this.router.patch(`${this.path}/:id`, this.modifyStateStudent);
     this.router.delete(`${this.path}/:id`, this.deleteStudent);
+    this.router.delete(this.path, (_, res) => {
+      error.E405(res, 'Method not allowed');
+    });
   }
 
   /**
@@ -168,7 +171,7 @@ export default class StudentController implements IController {
    * /students/{id}:
    *  get:
    *    tags:
-   *      - Student
+   *      - Students
    *    summary: Gets subjects by id
    *    responses:
    *      200:
@@ -315,7 +318,7 @@ export default class StudentController implements IController {
    * /student:
    *  post:
    *    tags:
-   *      - Student
+   *      - Students
    *    summary: Create a student
    *
    *    requestBody:
@@ -447,7 +450,7 @@ export default class StudentController implements IController {
    * /students/{id}:
    *  patch:
    *    tags:
-   *      - Student
+   *      - Students
    *    summary: Change state of student
    *    requestBody:
    *     description: Optional description in *markdown*

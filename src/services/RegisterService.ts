@@ -38,6 +38,8 @@ export default class RegisterService {
       throw new Error('Subject not found');
     } else if (await this._registerRepository.findById(register.idStudent, register.idSubject) !== null) {
       throw new Error('Register already exists');
+    } else if (await this._subjectRepository.getAvailableSlots(register.idSubject) === 0) {
+      throw new Error('No available slots');
     } else {
       await this._subjectRepository.removeSlotAvailable(register.idSubject);
       return await this._registerRepository.create(register);

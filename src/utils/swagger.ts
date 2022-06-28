@@ -7,9 +7,9 @@ const options: swaggerJsDoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'API',
+      title: 'Academic API',
       version: version,
-      description: 'API documentation',
+      description: 'API to manage academic information',
       license: {
         name: 'MIT',
         url: 'https://opensource.org/licenses/MIT'

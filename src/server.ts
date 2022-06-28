@@ -3,12 +3,16 @@ import PostsStudentController from './controllers/StudentController';
 import PostRegisterController from './controllers/RegisterController';
 import { ServiceLocator } from './ServiceLocator';
 import App from './app';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import GenericController from './controllers/GenericController';
 
 export const server = new App(
   [
     new PostsController(ServiceLocator.getSubjectService()),
     new PostsStudentController(ServiceLocator.getStudentService()),
-    new PostRegisterController(ServiceLocator.getRegisterService())
+    new PostRegisterController(ServiceLocator.getRegisterService()),
+    new GenericController()
   ],
   5000
 );

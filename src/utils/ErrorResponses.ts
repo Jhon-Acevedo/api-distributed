@@ -29,6 +29,13 @@ export const Errors = {
       message: message
     });
   },
+  E405: (res: Response, message: string) => {
+    res.status(405).json({
+      code: 405,
+      error: 'Method Not Allowed',
+      message: message
+    });
+  },
   E409: (res: Response, message: string) => {
     res.status(409).json({
       code: 409,

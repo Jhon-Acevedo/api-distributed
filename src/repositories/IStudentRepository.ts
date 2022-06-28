@@ -1,14 +1,17 @@
-import { Student } from "../models/Student";
+import { Student } from '../models/Student';
 import { Subject } from '../models/Subject';
 
-export default interface IStudentRepository{
-    findAll(): Promise<Student[]>;
-    findById(id: number): Promise<Student>;
-    findByStudentCode(student_code: string): Promise<Student>;
-    findByNumberAndTypeDoc(document_number: string, document_type: string): Promise<Student>;
-    create(student: Student): Promise<Student>;
-    update(student: Student): Promise<Student>;
-    modifyStateStudent(student: Student): Promise<Student>;
-    delete(id: number): Promise<Student>;
-    getSubjectsByIds(ids: number[]): Promise<Student[]>;
+export default interface IStudentRepository {
+  findAll(): Promise<Student[]>;
+  findById(id: number): Promise<Student>;
+  findByStudentCode(student_code: string): Promise<Student>;
+  findByNumberAndTypeDoc(
+    document_number: string,
+    document_type: string
+  ): Promise<Student>;
+  create(student: Student): Promise<Student>;
+  update(id: number, student: Student): Promise<Student>;
+  modifyStateStudent(id: number, student: Student): Promise<Student>;
+  delete(id: number): Promise<Student>;
+  getSubjectsByIds(ids: number[]): Promise<Student[]>;
 }

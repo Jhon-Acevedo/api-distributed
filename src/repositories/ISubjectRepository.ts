@@ -14,4 +14,5 @@ export default interface ISubjectRepository {
   ): Promise<Subject>;
   removeSlotAvailable(id: number): Promise<Subject>;
   addSlotAvailable(id: number): Promise<Subject>;
+  getSubjectsByIds(ids: number[]): Promise<Subject[]>;
 }

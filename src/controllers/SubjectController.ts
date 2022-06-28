@@ -41,7 +41,6 @@ export default class SubjectController implements IController {
    *         - slots
    *         - availableSlots
    *         - status
-   *
    *       properties:
    *         id:
    *           type: number
@@ -86,7 +85,6 @@ export default class SubjectController implements IController {
    *         availableSlots: 20
    *         credits: 5
    *         status: true
-   *
    *     UpdateSubject:
    *       type: object
    *       required:
@@ -143,7 +141,6 @@ export default class SubjectController implements IController {
    *         credits: 5
    *         status: true
    *
-   *
    */
 
   /**
@@ -179,11 +176,11 @@ export default class SubjectController implements IController {
    *    summary: Gets subjects by id
    *    responses:
    *      200:
-   *        description: Gets all subjects by id successfully
+   *        description: If subject is found
    *      400:
-   *        description: If it get a id of a subjects invalid
+   *        description: If id is not a number
    *      404:
-   *        description: The id of a subjects not found
+   *        description: If the subject does not exist
    *    parameters:
    *      - in: path
    *        name: id
@@ -228,16 +225,12 @@ export default class SubjectController implements IController {
    *         schema:
    *           $ref: '#/components/schemas/CreateSubject'
    *    responses:
-   *      200:
+   *      201:
    *        description: The subject was successfully created
-   *        content:
-   *          application/json:
-   *            schema:
-   *              
    *      400:
-   *        description: If it get a id of a subjects invalid
-   *      500:
-   *        description: If it fails to creat subjects
+   *        description: If the body is not a valid JSON
+   *      409:
+   *        description: If the subject already exists
    *        
    *       
    
@@ -275,12 +268,10 @@ export default class SubjectController implements IController {
    *    responses:
    *      200:
    *        description: The subjects has been successfully updated
-   *        content:
-   *          application/json:
-   *            schema:
-   *              $ref: '#/components/schemas/UpdateSubject'
    *      400:
-   *        description: If it get a id of a subjects invalid
+   *        description: If the body is not a valid JSON
+   *      404:
+   *        description: If the subject does not exist
    *      500:
    *        description: If it fails to update subjects
    *    parameters:
@@ -313,14 +304,12 @@ export default class SubjectController implements IController {
    *      - Subject
    *    summary: Delete a subject by id
    *    responses:
-   *      200:
-   *        description: If it gets all subjects successfully
-   *        content:
-   *         application/json:
-   *           schema:
-   *             $ref: '#/components/schemas/DeleteSubject'
+   *      204:
+   *        description: If the subject was successfully deleted
    *      400:
-   *        description: If it get a id of a subjects invalid
+   *        description: If the id is not a number
+   *      404:
+   *        description: If the subject does not exist
    *      500:
    *        description: If it fails to delete subjects
    *    parameters:
@@ -341,8 +330,8 @@ export default class SubjectController implements IController {
     }
     await this._subjectService
       .delete(Number(req.params.id))
-      .then(data => {
-        success.S200(res, 'Subject deleted successfully', data);
+      .then(() => {
+        success.S204(res, 'Subject deleted successfully');
       })
       .catch(err => {
         this.handleErrors(err, res);

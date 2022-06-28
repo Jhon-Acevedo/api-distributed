@@ -12,5 +12,10 @@ export const SuccessfulResponses = {
       message: message,
       data: data
     });
+  },
+  S204: (res: Response, message: string) => {
+    res.status(204).json({
+      message: message
+    });
   }
 };

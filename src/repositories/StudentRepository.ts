@@ -23,7 +23,7 @@ export default class StudentRepository implements IStudentRepository {
     return (await this._db
       .find()
       .toArray()
-      .then((result) => {
+      .then(result => {
         return result;
       })) as Student[];
   }
@@ -34,7 +34,7 @@ export default class StudentRepository implements IStudentRepository {
    * @returns the found student
    */
   async findById(id: number): Promise<Student> {
-    return (await this._db.findOne({ id: id }).then((result) => {
+    return (await this._db.findOne({ id: id }).then(result => {
       return result;
     })) as Student;
   }
@@ -44,23 +44,28 @@ export default class StudentRepository implements IStudentRepository {
    * @param student_code id of the student to find
    * @returns the found student
    */
-   async findByStudentCode(student_code: string): Promise<Student> {
-    return (await this._db.findOne({ student_code: student_code }).then((result) => {
-      return result;
-    })) as Student;
+  async findByStudentCode(student_code: string): Promise<Student> {
+    return (await this._db
+      .findOne({ student_code: student_code })
+      .then(result => {
+        return result;
+      })) as Student;
   }
 
   /**
    * Find a student by document_number && document_type in the database
-   * @param student_code id of the student to find
    * @returns the found student
+   * @param doc document_number of the student to find
+   * @param type type of the document of the student to find
    */
   async findByNumberAndTypeDoc(doc: string, type: string): Promise<Student> {
-      return (await this._db.findOne({ document_number: doc, document_type:type}).then((result) => {
+    return (await this._db
+      .findOne({ document_number: doc, document_type: type })
+      .then(result => {
         return result;
       })) as Student;
-    }
-  
+  }
+
   /**
    * Create a new student in the database
    * @param student student to create
@@ -70,7 +75,7 @@ export default class StudentRepository implements IStudentRepository {
     const inserted = await this._db.insertOne(student);
     return (await this._db
       .findOne({ _id: inserted.insertedId })
-      .then((result) => result)) as Student;
+      .then(result => result)) as Student;
   }
 
   /**
@@ -99,9 +104,9 @@ export default class StudentRepository implements IStudentRepository {
   /**
    * Modify state a student in the database
    * @param student. new data of the student to modify state
-   * @returns the state student has been modify
+   * @returns the state student has been modified
    */
-   async modifyStateStudent(student: Student): Promise<Student> {
+  async modifyStateStudent(student: Student): Promise<Student> {
     await this._db.updateOne(
       { id: student.id },
       {
@@ -126,7 +131,18 @@ export default class StudentRepository implements IStudentRepository {
    */
   async delete(id: number): Promise<Student> {
     const studentToDelete = this.findById(id);
-    await this._db.deleteOne({ id: id }).then((result) => result);
+    await this._db.deleteOne({ id: id }).then(result => result);
     return studentToDelete;
+  }
+
+  /**
+   * Get list of students by id
+   * @param ids list of ids of the students to get
+   */
+  async getSubjectsByIds(ids: number[]): Promise<Student[]> {
+    return (await this._db
+      .find({ id: { $in: ids } })
+      .toArray()
+      .then(result => result)) as Student[];
   }
 }

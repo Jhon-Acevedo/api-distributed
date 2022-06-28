@@ -40,6 +40,28 @@ export default class StudentRepository implements IStudentRepository {
   }
 
   /**
+   * Find a student by student_code in the database
+   * @param student_code id of the student to find
+   * @returns the found student
+   */
+   async findByStudentCode(student_code: string): Promise<Student> {
+    return (await this._db.findOne({ student_code: student_code }).then((result) => {
+      return result;
+    })) as Student;
+  }
+
+  /**
+   * Find a student by document_number && document_type in the database
+   * @param student_code id of the student to find
+   * @returns the found student
+   */
+  async findByNumberAndTypeDoc(doc: string, type: string): Promise<Student> {
+      return (await this._db.findOne({ document_number: doc, document_type:type}).then((result) => {
+        return result;
+      })) as Student;
+    }
+  
+  /**
    * Create a new student in the database
    * @param student student to create
    * @returns the created student
@@ -57,6 +79,29 @@ export default class StudentRepository implements IStudentRepository {
    * @returns the updated student
    */
   async update(student: Student): Promise<Student> {
+    await this._db.updateOne(
+      { id: student.id },
+      {
+        $set: {
+          document_number: student.document_number,
+          document_type: student.document_type,
+          name: student.name,
+          surname: student.surname,
+          student_code: student.student_code,
+          email: student.email,
+          state: student.state
+        }
+      }
+    );
+    return await this.findById(student.id);
+  }
+
+  /**
+   * Modify state a student in the database
+   * @param student. new data of the student to modify state
+   * @returns the state student has been modify
+   */
+   async modifyStateStudent(student: Student): Promise<Student> {
     await this._db.updateOne(
       { id: student.id },
       {

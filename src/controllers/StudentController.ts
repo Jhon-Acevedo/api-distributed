@@ -4,14 +4,18 @@ import { Request, Response, Router } from 'express';
 import { Errors as error } from '../utils/ErrorResponses';
 import { SuccessfulResponses as success } from '../utils/SuccesfulResponses';
 import { Student } from '../models/Student';
+import {createLog} from "../utils/Logger";
+import LogsService from "../services/LogsService";
 
 export default class StudentController implements IController {
   private _studentService: StudentService;
+  private _logService: LogsService;
   path: string;
   router: Router;
 
-  constructor(studentService: StudentService) {
+  constructor(studentService: StudentService, logService: LogsService) {
     this._studentService = studentService;
+    this._logService = logService
     this.path = process.env.API_STUDENTS_URL as string;
     this.router = Router();
     this.initializeRoutes();
@@ -164,6 +168,11 @@ export default class StudentController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Students/",
+      `GET /Students/`,
+      this._logService
+    )
   };
 
   /**
@@ -218,6 +227,11 @@ export default class StudentController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Students/id",
+      `GET /Students/${req.params.id}`,
+      this._logService
+    )
   };
 
   /**
@@ -260,6 +274,11 @@ export default class StudentController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Students/code/student_code",
+      `GET /Students/code/${req.params.student_code}`,
+      this._logService
+    )
   };
 
   /**
@@ -310,7 +329,13 @@ export default class StudentController implements IController {
         .catch((err: Error) => {
           this.handleErrors(err, res);
         });
+      await createLog(
+        "/Students/NumberAndTypeDoc/{doc}/{type}",
+        `GET /Students/NumberAndTypeDoc/${req.params.doc}/${req.params.type}`,
+        this._logService
+      )
     }
+
   };
 
   /**
@@ -374,6 +399,11 @@ export default class StudentController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Students/",
+      `POST /Students/`,
+      this._logService
+    )
   };
 
   /**
@@ -443,6 +473,11 @@ export default class StudentController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Students/{id}",
+      `PUT /Students/${req.params.id}`,
+      this._logService
+    )
   };
 
   /**
@@ -512,6 +547,11 @@ export default class StudentController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Students/{id}",
+      `PATCH /Students/${req.params.id}`,
+      this._logService
+    )
   };
 
   /**
@@ -556,6 +596,11 @@ export default class StudentController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Students/{id}",
+      `DELETE /Students/${req.params.id}`,
+      this._logService
+    )
   };
 
   /**

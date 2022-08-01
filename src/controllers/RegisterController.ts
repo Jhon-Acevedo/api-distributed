@@ -1,16 +1,21 @@
 import RegisterService from '../services/RegisterService';
-import { Router, Request, Response } from 'express';
-import { IController } from './IController';
-import { Errors as error } from '../utils/ErrorResponses';
-import { SuccessfulResponses as success } from '../utils/SuccesfulResponses';
+import {Router, Request, Response} from 'express';
+import {IController} from './IController';
+import {Errors as error} from '../utils/ErrorResponses';
+import {SuccessfulResponses as success} from '../utils/SuccesfulResponses';
+import LogsService from "../services/LogsService";
+import {createLog} from "../utils/Logger";
 
 export default class RegisterController implements IController {
+
   private _registerService: RegisterService;
+  private _logService: LogsService;
   path: string;
   router: Router;
 
-  constructor(registerService: RegisterService) {
+  constructor(registerService: RegisterService, logService: LogsService) {
     this._registerService = registerService;
+    this._logService = logService;
     this.path = process.env.API_REGISTRATIONS_URL as string;
     this.router = Router();
     this.initializeRoutes();
@@ -116,6 +121,11 @@ export default class RegisterController implements IController {
       .catch((err) => {
         this.handleError(err, res);
       });
+    await createLog(
+      "/Registrations/",
+      `GET /Registrations/`,
+      this._logService
+    )
   };
 
   /**
@@ -179,6 +189,11 @@ export default class RegisterController implements IController {
         .catch((err) => {
           this.handleError(err, res);
         });
+      await createLog(
+        "/Students/",
+        `POST /Registrations/`,
+        this._logService
+      )
     }
   };
 
@@ -238,6 +253,11 @@ export default class RegisterController implements IController {
         .catch((err) => {
           this.handleError(err, res);
         });
+      await createLog(
+        "/Students/",
+        `GET /Registrations/Subject/${req.params.id}`,
+        this._logService
+      )
     }
   };
 
@@ -297,6 +317,11 @@ export default class RegisterController implements IController {
         .catch((err) => {
           this.handleError(err, res);
         });
+      await createLog(
+        "/Registrations/Student/{id}",
+        `GET /Students/Students/${req.params.id}`,
+        this._logService
+      )
     }
   };
 
@@ -337,6 +362,11 @@ export default class RegisterController implements IController {
       .catch((err) => {
         this.handleError(err, res);
       });
+    await createLog(
+      "/Registrations/",
+      `DELETE /Students/`,
+      this._logService
+    )
   };
 
   /**
@@ -363,4 +393,9 @@ export default class RegisterController implements IController {
         break;
     }
   };
+
+  /**
+   * Create a new Log
+   */
+
 }

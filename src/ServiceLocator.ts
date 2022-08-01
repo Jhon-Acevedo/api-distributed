@@ -5,6 +5,8 @@ import StudentRepository from './repositories/StudentRepository';
 import ConnectionMongo from './connectionDB/ConnectionMongo';
 import RegisterRepository from './repositories/RegisterRepository';
 import RegisterService from './services/RegisterService';
+import LogsService from "./services/LogsService";
+import {LogRepository} from "./repositories/LogRepository";
 
 export const ServiceLocator = {
   getStudentService: () => {
@@ -25,6 +27,11 @@ export const ServiceLocator = {
     const studentRepository = new StudentRepository(dbConnection);
     const subjectRepository = new SubjectRepository(dbConnection);
     return new RegisterService(registerRepository,studentRepository,subjectRepository);
-  }
+  },
 
+  getLogService: () =>  {
+    const dbConnection = new ConnectionMongo();
+    const logRepository = new LogRepository(dbConnection);
+    return new LogsService(logRepository);
+  }
 };

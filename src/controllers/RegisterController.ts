@@ -121,6 +121,11 @@ export default class RegisterController implements IController {
       .catch((err) => {
         this.handleError(err, res);
       });
+    await createLog(
+      "/Registrations/",
+      `GET /Registrations/`,
+      this._logService
+    )
   };
 
   /**
@@ -184,6 +189,11 @@ export default class RegisterController implements IController {
         .catch((err) => {
           this.handleError(err, res);
         });
+      await createLog(
+        "/Students/",
+        `POST /Registrations/`,
+        this._logService
+      )
     }
   };
 
@@ -243,6 +253,11 @@ export default class RegisterController implements IController {
         .catch((err) => {
           this.handleError(err, res);
         });
+      await createLog(
+        "/Students/",
+        `GET /Registrations/Subject/${req.params.id}`,
+        this._logService
+      )
     }
   };
 
@@ -303,9 +318,9 @@ export default class RegisterController implements IController {
           this.handleError(err, res);
         });
       await createLog(
-        "/Students/id",
-        `/Students/${req.params.id}`,
-        "Successful"
+        "/Registrations/Student/{id}",
+        `GET /Students/Students/${req.params.id}`,
+        this._logService
       )
     }
   };
@@ -347,6 +362,11 @@ export default class RegisterController implements IController {
       .catch((err) => {
         this.handleError(err, res);
       });
+    await createLog(
+      "/Registrations/",
+      `DELETE /Students/`,
+      this._logService
+    )
   };
 
   /**

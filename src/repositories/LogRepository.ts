@@ -20,6 +20,7 @@ export class LogRepository implements ILogRepository {
    * @returns the created log
    */
   async createLog(log: Log): Promise<Log> {
+    console.log("CreateLOG")
     const inserted = await this._db.insertOne(log)
     return (await this._db
       .findOne({_id: inserted.insertedId})

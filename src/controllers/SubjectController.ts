@@ -3,14 +3,18 @@ import { IController } from './IController';
 import { Request, Response, Router } from 'express';
 import { Errors as error } from '../utils/ErrorResponses';
 import { SuccessfulResponses as success } from '../utils/SuccesfulResponses';
+import {createLog} from "../utils/Logger";
+import LogsService from "../services/LogsService";
 
 export default class SubjectController implements IController {
   private readonly _subjectService: SubjectService;
+  private readonly _logService: LogsService
   path: string;
   router: Router;
 
-  constructor(subjectService: SubjectService) {
+  constructor(subjectService: SubjectService, logService: LogsService) {
     this._subjectService = subjectService;
+    this._logService = logService;
     this.path = process.env.API_SUBJECTS_URL as string;
     this.router = Router();
     this.initializeRoutes();
@@ -165,6 +169,11 @@ export default class SubjectController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Subjects/",
+      `GET /Subject/`,
+      this._logService
+    )
   };
 
   /**
@@ -207,6 +216,11 @@ export default class SubjectController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Students/{id}",
+      `GET /Subject/${req.params.id}`,
+      this._logService
+    )
   };
 
   /**
@@ -249,6 +263,11 @@ export default class SubjectController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Students/",
+      `POST /Subject/`,
+      this._logService
+    )
   };
 
   /**
@@ -293,6 +312,11 @@ export default class SubjectController implements IController {
         .catch(err => {
           this.handleErrors(err, res);
         });
+      await createLog(
+        "/Students/{id}",
+        `PUT /Subject/${req.params.id}`,
+        this._logService
+      )
     }
   };
 
@@ -337,6 +361,11 @@ export default class SubjectController implements IController {
       .catch(err => {
         this.handleErrors(err, res);
       });
+    await createLog(
+      "/Students/",
+      `DELETE /Subject/${req.params.id}`,
+      this._logService
+    )
   };
 
   /**

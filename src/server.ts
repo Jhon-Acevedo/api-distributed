@@ -5,11 +5,13 @@ import { ServiceLocator } from './ServiceLocator';
 import App from './app';
 import GenericController from './controllers/GenericController';
 
+const logService = ServiceLocator.getLogService()
+
 export const server = new App(
   [
-    new PostsController(ServiceLocator.getSubjectService()),
-    new PostsStudentController(ServiceLocator.getStudentService()),
-    new PostRegisterController(ServiceLocator.getRegisterService(), ServiceLocator.getLogService()),
+    new PostsController(ServiceLocator.getSubjectService(), logService),
+    new PostsStudentController(ServiceLocator.getStudentService(), logService),
+    new PostRegisterController(ServiceLocator.getRegisterService(), logService),
     new GenericController()
   ],
   5000

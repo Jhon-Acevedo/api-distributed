@@ -12,7 +12,9 @@ export default class LogsService {
     return await this._logRepository.createLog(log);
   }
 
+  // TODO: test if this works, if not, find a better way to do this.
+  // TODO: check out this: https://ipdata.co/blog/how-to-get-the-ip-address-in-javascript/
   async getServerIP(): Promise<string> {
-    
+    return location.host;
   }
 }

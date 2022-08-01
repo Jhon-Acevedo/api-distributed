@@ -14,7 +14,7 @@ export default class LogsService {
 
   // TODO: test if this works, if not, find a better way to do this.
   // TODO: check out this: https://ipdata.co/blog/how-to-get-the-ip-address-in-javascript/
-  async getServerIP(): Promise<string> {
+  static getServerIP(): string {
     return location.host;
   }
 }

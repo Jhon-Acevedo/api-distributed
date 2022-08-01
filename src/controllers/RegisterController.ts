@@ -4,7 +4,7 @@ import {IController} from './IController';
 import {Errors as error} from '../utils/ErrorResponses';
 import {SuccessfulResponses as success} from '../utils/SuccesfulResponses';
 import LogsService from "../services/LogsService";
-import {Log} from "../models/Log";
+import {createLog} from "../utils/Logger";
 
 export default class RegisterController implements IController {
 
@@ -302,6 +302,11 @@ export default class RegisterController implements IController {
         .catch((err) => {
           this.handleError(err, res);
         });
+      await createLog(
+        "/Students/id",
+        `/Students/${req.params.id}`,
+        "Successful"
+      )
     }
   };
 
@@ -372,23 +377,5 @@ export default class RegisterController implements IController {
   /**
    * Create a new Log
    */
-  async createLog(endpoint: string, request:string ,message:?string): Promise<void> {
-    function uuid() : string{
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-          return v.toString(16);
-        }
-      );
-    }
 
-
-    const log = {
-      id: uuid(),
-      server_ip: ,
-      date: new Date(),
-      message: message || '',
-      request: request,
-    } as Log;
-
-  }
 }

@@ -9,7 +9,7 @@ export const server = new App(
   [
     new PostsController(ServiceLocator.getSubjectService()),
     new PostsStudentController(ServiceLocator.getStudentService()),
-    new PostRegisterController(ServiceLocator.getRegisterService()),
+    new PostRegisterController(ServiceLocator.getRegisterService(), ServiceLocator.getLogService()),
     new GenericController()
   ],
   5000

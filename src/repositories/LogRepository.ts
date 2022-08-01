@@ -10,7 +10,7 @@ export class LogRepository implements ILogRepository {
   constructor(private _dbConnection: IConnection) {
     this._dbConnection.connect();
     this._db = (this._dbConnection.client as MongoClient).db(process.env.DB_NAME).collection(
-      process.env.LOG_COLLECTION_NAME as string
+      process.env.LOGS_COLLECTION_NAME as string
     )
   }
 

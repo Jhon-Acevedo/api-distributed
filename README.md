@@ -65,7 +65,7 @@ $ npm install
 $ npm run dev
 ```
 
-### Develop
+### Rama o branch Develop
 Posee los archivos principales del proyecto y es la rama a la que debe hacerce merge. 
     
 ## 📜 License

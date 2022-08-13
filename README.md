@@ -19,6 +19,7 @@
 Academic API utiliza 2 proyectos de GITHUB:
 - Repositorio de Fronted: https://github.com/criiscz/AcademicApp 
 - Repositorio de Backend: https://github.com/Jhon-Acevedo/api-distributed
+- Prototipos: https://www.figma.com/file/sBaksIEk7wAKVdUiFMG4yy/AcademicAPI-SD?node-id=0%3A1
 
 ## 🖥️ ¿Cómo funciona?
 

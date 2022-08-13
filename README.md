@@ -57,7 +57,7 @@ Para la utilización de estos proyectos se utilizan tecnologias actuales que pos
 
  ## 🔧 Setup
 
-Para hacer uso del repositorio clona el repositorio en local, instala los modulos de Node:
+Para hacer uso del repositorio clona el repositorio en local, instala los modulos de Node de la siguiente manera:
     
 ```sh
 $ git clone https://github.com/Jhon-Acevedo/api-distributed

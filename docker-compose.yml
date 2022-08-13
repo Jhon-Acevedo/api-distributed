@@ -1,0 +1,20 @@
+version: "3"
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: server1
+    image: server1
+    restart: always
+    volumes:
+      - /usr/app/node_modules
+      - ./src:/usr/app/src
+      - ./build:/usr/app/build
+    #networks:
+     # - app-network
+    ports:
+      - "5000:5000"
+##networks:
+  ##app-network:
+    ##driver: bridge

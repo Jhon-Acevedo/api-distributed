@@ -55,3 +55,19 @@ Para la utilización de estos proyectos se utilizan tecnologias actuales que pos
 | :---------: | :---------: | :---------: | 
 | Yes | YES | Yes |
 
+ ## 🔧 Setup
+
+Para hacer uso del repositorio clona el repositorio en local, instala los modulos de Node:
+    
+```sh
+$ git clone https://github.com/Jhon-Acevedo/api-distributed
+$ npm install
+$ npm run dev
+```
+
+### Develop
+Posee los archivos principales del proyecto y es la rama a la que debe hacerce merge. 
+    
+## 📜 License
+
+This software is licensed under the [MIT]© 
